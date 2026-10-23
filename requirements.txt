@@ -1,0 +1,8 @@
+# Pinned versions so every student, and Render, installs exactly the same thing.
+# To upgrade a package, change its version here, reinstall, and test before you commit.
+requests==2.34.2
+psycopg[binary]==3.3.6
+python-dotenv==1.2.4
+streamlit==1.66.0
+anthropic==1.15.0
+openai==3.35.1

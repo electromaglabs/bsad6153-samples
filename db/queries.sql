@@ -1,0 +1,9 @@
+-- db/queries.sql: business questions answered with SQL (Week 2).
+--
+-- At least five queries, each answering a question from your baseline log.
+-- Put the question in plain English in a comment above each query.
+-- Across the five, use: two JOINs, one GROUP BY, one filter by time,
+-- and one query whose answer surprised you (explain why in the comment).
+--
+-- Question 1: ...
+-- select ...;

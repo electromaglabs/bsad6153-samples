@@ -1,0 +1,22 @@
+# Render blueprint: describes your website so Render can create it from this repository.
+# In Render: New > Blueprint, pick this repository, then enter each secret when prompted.
+# Secrets are never written in this file: "sync: false" makes Render ask for the value.
+services:
+  - type: web
+    name: bsad6153-project
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # $PORT is provided by Render; 0.0.0.0 lets Render reach the app.
+    startCommand: streamlit run app/streamlit_app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: FRESHNESS_HOURS
+        value: "24"
+      - key: APP_DATABASE_URL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: APP_PASSWORD
+        sync: false

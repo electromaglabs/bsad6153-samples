@@ -1,0 +1,22 @@
+# Secrets: never commit these. Real values live in .env (local),
+# Render's environment settings (website), and GitHub Actions secrets (sync).
+.env
+.env.*
+!.env.example
+
+# Your Python virtual environment (each computer makes its own)
+.venv/
+venv/
+
+# Raw API downloads can be large; commit a small sample to data/sample/ instead
+data/raw/
+
+# Python and editor clutter
+__pycache__/
+*.pyc
+.pytest_cache/
+.streamlit/secrets.toml
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

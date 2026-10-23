@@ -1,0 +1,22 @@
+-- db/schema.sql: your database design (Week 2), extended in Weeks 3 and 6.
+--
+-- Design on paper first, using docs/data_dictionary.md, then build it here.
+-- Required (see the Week 2 page):
+--   * at least 3 related tables that match the real entities in your data
+--   * a primary key on every table; keep the source's natural ID with a UNIQUE constraint
+--   * foreign keys for every relationship
+--   * real data types (timestamptz, integer, numeric, text), not text for everything
+--   * NOT NULL and CHECK constraints that encode what you learned about the data
+--   * audit columns on every table: first_seen_at and last_updated_at
+--
+-- Week 3 adds sync_runs. Week 6 adds agent_runs and agent_proposals.
+-- Use identity columns (generated always as identity) for IDs you create yourself.
+--
+-- Example shape only. Replace it with your own entities:
+--
+-- create table players (
+--     player_id       bigint generated always as identity primary key,
+--     username        text not null unique,            -- the API's natural ID
+--     first_seen_at   timestamptz not null default now(),
+--     last_updated_at timestamptz not null default now()
+-- );
