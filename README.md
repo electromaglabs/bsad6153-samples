@@ -1,7 +1,7 @@
 # BSAD 6153 Project: &lt;your project name&gt;
 
-**Student:** &lt;your name&gt;
-**My decision:** &lt;the decision you make regularly that this project improves&gt;
+**Student:** Kalynn Samples
+**Decision:** A decision I am often having to make is finding potential clients to market my IT and electrical services, I intend to create a hub of various publicly available data sources to find and eventually reach out to potential clients.
 **Website:** &lt;your domain, from Week 4&gt;
 
 This repository is one complete AI system, built over eight weeks: a real API, synced on a schedule into a
