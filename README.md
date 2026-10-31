@@ -101,8 +101,31 @@ every command before you approve it, and keep auto-approve off.
 
 ## How to run this project
 
-<!-- Keep this current: how to run the sync, the website, and the evaluations. -->
+### Fetch the data (Week 1)
+
+1. Activate the virtual environment: `source .venv/bin/activate` (macOS) or `.venv\Scripts\Activate.ps1` (Windows).
+2. Install packages if you haven't: `pip install -r requirements.txt`
+3. Optional but recommended: get a free Socrata **app token** from opendata.usac.org (developer settings) and put it in `.env`
+   as `SOCRATA_APP_TOKEN=...`. Without it the script still runs, with lower rate limits.
+4. Run the fetch:
+
+   ```bash
+   python ingest/fetch.py                                  # Oklahoma + Kansas, funding year 2027
+   python ingest/fetch.py --states OK KS --years 2026 2027 # other states or years
+   python ingest/fetch.py --page-size 200                  # smaller pages (more requests)
+   ```
+
+5. Output:
+   - Raw API responses: `data/raw/<run time>/service_requests/page_NNN.json` and `.../applicants/page_NNN.json` (ignored by Git)
+   - Run summary (counts, missing fields, HTTP retries): `data/raw/<run time>/summary.json`
+   - Small samples for Git: `data/sample/service_requests_sample.json`, `data/sample/applicants_sample.json`
+
+The script exits with code 0 when it got at least 500 rows and no pages failed, and 1 otherwise.
+See `docs/data_dictionary.md` for what the data means.
 
 ## Credits
 
-<!-- Your data API's required attribution, plus any open-source code or samples you used. -->
+- **Data:** E-Rate FCC Form 470 Tool Data, Universal Service Administrative Company (USAC),
+  https://opendata.usac.org (dataset `jt8s-3q52`). Published as public domain; attribution to USAC.
+- **API:** Socrata Open Data API (SODA 2.1), https://dev.socrata.com
+- **Course template:** BSAD 6153 project repository template.
