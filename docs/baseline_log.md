@@ -7,14 +7,10 @@ Log each decision **while it happens**. Time yourself with a timer; don't estima
 Mark any entry you had to reconstruct from memory as *(reconstructed)*.
 
 | Date | What I was deciding | What I looked at | Time (min) | What I wished I knew | Confidence (1-5) |
-
-|10-28 | Potential client outreach | www.alvaok.net/directory | 18 min | Websites list businesses and contacts only and a brief business name. I'd like to know more about their IT needs and their current equipment and user base | I'm not confident that contacts will result in work, but I am confident that the contacts are correct, so Confidence (3). |
-
-Reconstructed | Potential client outreach | www.google.com | 26 min (estimated) | Businesses are mentioned but paid ads begin at the top and thus not sorted according to my perceived relevance but according to Google's perceived gain. Clients can be found this way but not with any meaningful aim in my opinion. Most listed clients are known in our small area. | Confidence (2)
-
-Reconstructed | Potential client outreach, specifically education sector | Several hours throughout the week (estimated) | Reaching out to our education customers, or hoping they reach out to us when they need E-Rate related hardware. | It is hard to know how well school districts handle their E-Rate funds, we would like to assist with that  monitoring to ensure funds are deployed when their hardware and software can benefit the most from it. | Confidence (2)
-
-
+|---|---|---|---|---|---|
+| 10-28 | Potential client outreach | www.alvaok.net/directory | 18 min | Websites list businesses and contacts only and a brief business name. I'd like to know more about their IT needs and their current equipment and user base | I'm not confident that contacts will result in work, but I am confident that the contacts are correct, so Confidence (3). |
+| 10-1 (Reconstructed) | Potential client outreach | www.google.com | 26 min (estimated) | Businesses are mentioned but paid ads begin at the top and thus not sorted according to my perceived relevance but according to Google's perceived gain. Clients can be found this way but not with any meaningful aim in my opinion. Most listed clients are known in our small area. | Confidence (2) |
+| 10-10 (Reconstructed) | Potential client outreach, specifically education sector | E-Rate Form 470 | Several hours throughout the week (estimated) | It is hard to know how well school districts handle their E-Rate funds, we would like to assist with that  monitoring to ensure funds are deployed when their hardware and software can benefit the most from it. | Confidence (2) |
 
 ## Reflection
 
