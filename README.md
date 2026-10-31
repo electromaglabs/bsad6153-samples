@@ -96,8 +96,33 @@ every command before you approve it, and keep auto-approve off.
 
 ## Project proposal (Week 1)
 
-<!-- About 300 words: data source and backup API, your decision and workflow (from your baseline log),
-     your first agent idea, and risks. See the Week 1 page. -->
+**Data source and backup.** The system is built on USAC's E-Rate FCC Form 470 dataset (`jt8s-3q52`), a public,
+no-cost Socrata REST API. Every Form 470 is a school, library, or consortium publicly asking vendors to bid on
+internet service, network equipment, cabling, or maintenance, with contact details, RFP documents, and the date
+bidding closes. New forms are certified daily and old ones are amended or canceled, so there is always something
+new to sync. If access breaks, my backup is GeoApify, CMS NPI, NCES Edge School Locations, ProPublica, Overture Maps Places.
+
+**My decision and workflow.** Each week I decide which potential clients my IT and electrical business should
+reach out to. Today that means browsing the local business directory (18 minutes in my one timed session),
+searching Google, where paid ads bury relevant results (about 26 minutes), and, for schools, hoping districts
+contact us when they need E-Rate hardware or sifting through federal E-Rate data by hand, which takes several
+hours a week. None of these sources tell me what a prospect actually needs. Form 470 does: it says exactly what a
+school is requesting and when bids are due. The system should cut search time and show me requests that match
+what my business does well, in time to bid.
+
+**Agent idea (first draft).** Each week, after the sync, an agent finds new or changed Form 470s within about an
+hour of Alva, Oklahoma (including southern Kansas), ranks them by how well the requested services fit my
+business, and **drafts** a short, tailored outreach email for each one, with the bid deadline and RFP links. It
+never sends anything: every draft waits in a review queue until I approve it.
+
+**Risks.**
+- *Rate limits:* low today with an app token, but Socrata can change limits; the fetch backs off on 429s.
+- *Token:* an app token could be revoked or leak; it lives only in `.env` and GitHub secrets.
+- *Data volume:* rows multiply per RFP attachment (1,457 rows were only 129 applications); expanding states or
+  years grows quickly.
+- *Terms and ethics:* the data is public domain, but it contains real staff names and emails, so outreach must follow
+  commercial-email rules (CAN-SPAM) and the site should not republish contact lists.
+- *Timing:* a missed `allowable_contract_date` means a missed bid, so the sync schedule has to be reliable.
 
 ## How to run this project
 
