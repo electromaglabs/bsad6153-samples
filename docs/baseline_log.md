@@ -11,6 +11,8 @@ Mark any entry you had to reconstruct from memory as *(reconstructed)*.
 | 10-28 | Potential client outreach | www.alvaok.net/directory | 18 min | Websites list businesses and contacts only and a brief business name. I'd like to know more about their IT needs and their current equipment and user base | I'm not confident that contacts will result in work, but I am confident that the contacts are correct, so Confidence (3). |
 | 10-1 (Reconstructed) | Potential client outreach | www.google.com | 26 min (estimated) | Businesses are mentioned but paid ads begin at the top and thus not sorted according to my perceived relevance but according to Google's perceived gain. Clients can be found this way but not with any meaningful aim in my opinion. Most listed clients are known in our small area. | Confidence (2) |
 | 10-10 (Reconstructed) | Potential client outreach, specifically education sector | E-Rate Form 470 | Several hours throughout the week (estimated) | It is hard to know how well school districts handle their E-Rate funds, we would like to assist with that  monitoring to ensure funds are deployed when their hardware and software can benefit the most from it. | Confidence (2) |
+| 10-12 (Reconstructed) | Potential client outreach open data sources | www.searchenginejournal.com/free-data-sources/302601/ | 38 min (estimated) | Again, I wish I knew more about the potential customer's needs, current level of IT support, etc. | Confidence (3) |
+| 10-18 (Reconstructed) | Social media client outreach | www.facebook.com | 17 min | I wish I knew more about the customer's client base, with little community engagement, it is difficult to know if a social media page is still an active business. | Confidence (3) |
 
 ## Reflection
 
