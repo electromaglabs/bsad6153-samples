@@ -71,21 +71,21 @@
 ## Surprises
 
 
-1. One surpring issue we've found is that one row in the dataset is not exactly one request, or one application, or one applicant. We have 1,457 rows, but only 129 applications and 119 applicants. We have found that rows multiply because each service requests repeats for every RFP attachment. I am not entirely sure what an RFP attachment is at this time, but will continue to investigate as we complete this project. One single application alone has 98 rows because of these additional RFP attachments.
+1. One surprising issue we've found is that one row in the dataset is not exactly one request, or one application, or one applicant. We have 1,457 rows, but only 129 applications and 119 applicants. We have found that rows multiply because each service requests repeats for every RFP attachment. An RFP is a document the school uploads that describes the bid specs. One single application alone has 98 rows because of these additional RFP attachments.
 
-2. Another is that empty fields are dropped, not set to null. We have 4 canceled forms and they have no service_type keys at all. We've also found that code that reads 'record["service_type"]' crashes, and must use '.get()'
+2. Another is that empty fields are dropped, not set to null. We have 4 canceled forms and they have no service_type keys at all. We've also found that code that reads 'record["service_type"]' would crash, so we must use '.get()'
 
-3. Contact details are complete, but packed into a single string. Another interesting field is the 'authorized_person_employer' field, although in the data it equals 'authorized_person_name' so I'm not entirely sure if that's an error at this point or not. I will continue to investigate.
+3. Consultant details are complete, but packed into a single string. Another interesting field is the 'authorized_person_employer' field, although in the data it equals 'authorized_person_name' so I'm not entirely sure if that's an error at this point or not. I will continue to investigate.
 
-4. Numbers arrive as text strings and not numbers.
+4. Numbers arrive as text strings and not numbers, just a necessary piece of information when it comes to data parsing.
 
-5. Altered entries have multiple states, Original and Current, we thought we would need to filter all results as Current, but after looking at the data we saw that only 37 versions are Current, while 90 versions are Original. We will need to continue to search for both.
+5. Altered entries have multiple states, Original and Current, we thought we would need to filter all results as Current, but after looking at the data we saw that only 37 applications are Current, while 90 applications are Original. We will need to continue to search for both.
 
 
 ## Data-use ethics check
 
 **What do the API's terms of service allow and forbid (storage, display, commercial use, attribution)?**
-This data is open and accessible to the general public, but requires proper attribution os the source of the data. It is incredibly unfortunate that socrata.com/terms-of-service/ is currently down, making this information much more difficult to find. We were able to find a lot of relevant information on opendata.usac.org.
+This data is open and accessible to the general public, but requires proper attribution of the source of the data. It is incredibly unfortunate that socrata.com/terms-of-service/ is currently down, making this information much more difficult to find. We were able to find a lot of relevant information on opendata.usac.org. We may eventually plan to contact emails for business outreach and commercial email has its own set of rules (CAN-SPAM).
 
 **Does this data describe real, identifiable people? If so, did they expect it to be used this way?**
 Yes, this data does describe real people, schools, staff, technical contacts, etc. This was also their intention in supplying their data, for the purpose of connecting with an appropriate vendor or contractor. This is a notable ethics concern and special consideration may be taken into account with how we handle these data points.
