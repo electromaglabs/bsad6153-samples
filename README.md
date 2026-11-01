@@ -1,4 +1,4 @@
-# BSAD 6153 Project: &lt;your project name&gt;
+# BSAD 6153 Project: E-Rate Lead Finder for MSPs
 
 **Student:** Kalynn Samples
 **Decision:** A decision I am often having to make is finding potential clients to market my IT and electrical services, I intend to create a hub of various publicly available data sources to find and eventually reach out to potential clients.

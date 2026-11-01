@@ -85,7 +85,7 @@
 ## Data-use ethics check
 
 **What do the API's terms of service allow and forbid (storage, display, commercial use, attribution)?**
-This data is open and accessible to the general public, but requires proper attribution of the source of the data. It is incredibly unfortunate that socrata.com/terms-of-service/ is currently down, making this information much more difficult to find. We were able to find a lot of relevant information on opendata.usac.org. We may eventually plan to contact emails for business outreach and commercial email has its own set of rules (CAN-SPAM).
+This data is open and accessible to the general public, but requires proper attribution of the source of the data. The dataset is published as Public Domain, which permits storing, displaying, and commercial use. We may eventually plan to contact emails for business outreach and commercial email has its own set of rules (CAN-SPAM).
 
 **Does this data describe real, identifiable people? If so, did they expect it to be used this way?**
 Yes, this data does describe real people, schools, staff, technical contacts, etc. This was also their intention in supplying their data, for the purpose of connecting with an appropriate vendor or contractor. This is a notable ethics concern and special consideration may be taken into account with how we handle these data points.
