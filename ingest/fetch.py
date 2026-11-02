@@ -25,7 +25,7 @@ import os
 import random
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import requests
@@ -41,11 +41,11 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 SAMPLE_DIR = PROJECT_ROOT / "data" / "sample"
 
-REQUEST_TIMEOUT = 30        # seconds to wait for the server before giving up on one try
+REQUEST_TIMEOUT = 30  # seconds to wait for the server before giving up on one try
 PAUSE_BETWEEN_REQUESTS = 1  # seconds to wait between successful requests (be polite)
-MAX_RETRIES = 5             # tries per page before we give up on that page
-BACKOFF_BASE = 2            # retry waits grow 2s, 4s, 8s, 16s ... (plus a little randomness)
-BACKOFF_MAX = 60            # never wait longer than this between retries
+MAX_RETRIES = 5  # tries per page before we give up on that page
+BACKOFF_BASE = 2  # retry waits grow 2s, 4s, 8s, 16s ... (plus a little randomness)
+BACKOFF_MAX = 60  # never wait longer than this between retries
 
 # Fields we expect on every service-request row. Missing ones are counted and reported.
 EXPECTED_FIELDS = [
@@ -91,9 +91,9 @@ def get_with_retries(session, params, stats):
             stats["rate_limited"] += 1
             retry_after = resp.headers.get("Retry-After")
             if retry_after and retry_after.isdigit():
-                wait = min(int(retry_after), BACKOFF_MAX)   # server told us how long
+                wait = min(int(retry_after), BACKOFF_MAX)  # server told us how long
             else:
-                wait = backoff_seconds(attempt)             # it didn't, so back off ourselves
+                wait = backoff_seconds(attempt)  # it didn't, so back off ourselves
             log.warning("429 Too Many Requests (try %d/%d). Waiting %.1fs.", attempt, MAX_RETRIES, wait)
             time.sleep(wait)
             continue
@@ -125,7 +125,7 @@ def get_with_retries(session, params, stats):
 
 def backoff_seconds(attempt):
     """Exponential backoff with jitter: about 2, 4, 8, 16, 32 seconds, capped at BACKOFF_MAX."""
-    return min(BACKOFF_BASE ** attempt, BACKOFF_MAX) + random.uniform(0, 1)
+    return min(BACKOFF_BASE**attempt, BACKOFF_MAX) + random.uniform(0, 1)
 
 
 # ---------------------------------------------------------------------------
@@ -156,7 +156,9 @@ def fetch_all_pages(session, base_params, page_size, out_dir, label, stats):
         page_file.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
         records.extend(data)
-        log.info("[%s] got %d records (total %d) -> %s", label, len(data), len(records), page_file.relative_to(PROJECT_ROOT))
+        log.info(
+            "[%s] got %d records (total %d) -> %s", label, len(data), len(records), page_file.relative_to(PROJECT_ROOT)
+        )
 
         # A page with fewer rows than we asked for means we reached the end.
         if len(data) < page_size:
@@ -217,15 +219,26 @@ def main():
     where = f"billed_entity_state in({state_list}) AND funding_year in({year_list})"
     log.info("Filter: %s", where)
 
-    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    run_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     run_dir = RAW_DIR / run_id
-    stats = {k: 0 for k in ["requests", "timeouts", "connection_errors", "rate_limited",
-                            "server_errors", "client_errors", "bad_json", "failed_pages"]}
+    stats = {
+        k: 0
+        for k in [
+            "requests",
+            "timeouts",
+            "connection_errors",
+            "rate_limited",
+            "server_errors",
+            "client_errors",
+            "bad_json",
+            "failed_pages",
+        ]
+    }
 
     # --- Resource 1: service-request rows (main resource) ---
     service_requests = fetch_all_pages(
         session,
-        {"$where": where, "$order": ":id"},   # :id gives a stable order so pages don't overlap
+        {"$where": where, "$order": ":id"},  # :id gives a stable order so pages don't overlap
         args.page_size,
         run_dir / "service_requests",
         "service_requests",
@@ -238,11 +251,11 @@ def main():
         session,
         {
             "$select": "billed_entity_number, billed_entity_name, applicant_type, ben_address_1, "
-                       "billed_entity_city, billed_entity_state, billed_entity_zip, billed_entity_phone, "
-                       "count(*) AS service_request_rows, max(last_modified_date_time) AS last_modified",
+            "billed_entity_city, billed_entity_state, billed_entity_zip, billed_entity_phone, "
+            "count(*) AS service_request_rows, max(last_modified_date_time) AS last_modified",
             "$where": where,
             "$group": "billed_entity_number, billed_entity_name, applicant_type, ben_address_1, "
-                      "billed_entity_city, billed_entity_state, billed_entity_zip, billed_entity_phone",
+            "billed_entity_city, billed_entity_state, billed_entity_zip, billed_entity_phone",
             "$order": "billed_entity_number",
         },
         args.page_size,
@@ -255,7 +268,9 @@ def main():
     missing = count_missing_fields(service_requests, EXPECTED_FIELDS)
     unique_apps = len({r.get("application_number") for r in service_requests if r.get("application_number")})
     unique_bens = len({r.get("billed_entity_number") for r in service_requests if r.get("billed_entity_number")})
-    orphans = {r.get("billed_entity_number") for r in service_requests} - {a.get("billed_entity_number") for a in applicants}
+    orphans = {r.get("billed_entity_number") for r in service_requests} - {
+        a.get("billed_entity_number") for a in applicants
+    }
 
     summary = {
         "run_id": run_id,
@@ -277,7 +292,9 @@ def main():
 
     # Small sample for Git (data/raw/ is ignored; data/sample/ is committed)
     SAMPLE_DIR.mkdir(parents=True, exist_ok=True)
-    (SAMPLE_DIR / "service_requests_sample.json").write_text(json.dumps(service_requests[:3], indent=2), encoding="utf-8")
+    (SAMPLE_DIR / "service_requests_sample.json").write_text(
+        json.dumps(service_requests[:3], indent=2), encoding="utf-8"
+    )
     (SAMPLE_DIR / "applicants_sample.json").write_text(json.dumps(applicants[:3], indent=2), encoding="utf-8")
 
     log.info("---------------- SUMMARY ----------------")

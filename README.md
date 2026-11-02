@@ -31,6 +31,18 @@ every command before you approve it, and keep auto-approve off.
 5. **Check everything:** `python scripts/check_setup.py` should end with `Setup OK`.
 6. **Try the website:** `streamlit run app/streamlit_app.py` opens it in your browser. Press Ctrl+C to stop it.
 
+### Code style
+
+Python is formatted and linted with [Ruff](https://docs.astral.sh/ruff/), configured in `pyproject.toml` (120-character
+lines). Install it once with `pip install -r requirements-dev.txt`, then run these before each pull request:
+
+```bash
+ruff format .
+ruff check . --fix
+```
+
+`.editorconfig` sets indentation and line endings for every other file type.
+
 ### Working with your AI agent
 
 - **You approve every command.** Read it first, and if you don't understand it, ask the agent what it does.

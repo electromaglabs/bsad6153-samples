@@ -1,0 +1,20 @@
+# Code style settings for Ruff (formatter + linter).
+# Format:  ruff format .
+# Lint:    ruff check .        (add --fix to apply safe fixes)
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+extend-exclude = [".venv"]
+
+[tool.ruff.lint]
+# E/W = pycodestyle, F = pyflakes (unused imports, undefined names), I = import order,
+# B = common bugs, UP = modern Python syntax.
+select = ["E", "W", "F", "I", "B", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.lint.per-file-ignores]
+# The setup check exists to catch students running an older Python, so keep the version test.
+"scripts/check_setup.py" = ["UP036"]
