@@ -1,4 +1,4 @@
-# BSAD 6153 Project: &lt;your project name&gt;
+# BSAD 6153 Project: E-Rate Lead Finder for MSPs
 
 **Student:** Kalynn Samples
 **Decision:** A decision I am often having to make is finding potential clients to market my IT and electrical services, I intend to create a hub of various publicly available data sources to find and eventually reach out to potential clients.
@@ -30,6 +30,18 @@ every command before you approve it, and keep auto-approve off.
 4. **Create your secrets file:** copy `.env.example` to `.env`, and put a fake value on the `TEST_SECRET=` line.
 5. **Check everything:** `python scripts/check_setup.py` should end with `Setup OK`.
 6. **Try the website:** `streamlit run app/streamlit_app.py` opens it in your browser. Press Ctrl+C to stop it.
+
+### Code style
+
+Python is formatted and linted with [Ruff](https://docs.astral.sh/ruff/), configured in `pyproject.toml` (120-character
+lines). Install it once with `pip install -r requirements-dev.txt`, then run these before each pull request:
+
+```bash
+ruff format .
+ruff check . --fix
+```
+
+`.editorconfig` sets indentation and line endings for every other file type.
 
 ### Working with your AI agent
 
@@ -96,13 +108,61 @@ every command before you approve it, and keep auto-approve off.
 
 ## Project proposal (Week 1)
 
-<!-- About 300 words: data source and backup API, your decision and workflow (from your baseline log),
-     your first agent idea, and risks. See the Week 1 page. -->
+**Data source and backup.** The system is built on USAC's E-Rate FCC Form 470 dataset (`jt8s-3q52`), a public,
+no-cost Socrata REST API. Every Form 470 is a school, library, or consortium publicly asking vendors to bid on
+internet service, network equipment, cabling, or maintenance, with contact details, RFP documents, and the date
+bidding closes. New forms are certified daily and old ones are amended or canceled, so there is always something
+new to sync. If access breaks, my backup is GeoApify, CMS NPI, NCES Edge School Locations, ProPublica, Overture Maps Places.
+
+**My decision and workflow.** Each week I decide which potential clients my IT and electrical business should
+reach out to. Today that means browsing the local business directory (18 minutes in my one timed session),
+searching Google, where paid ads bury relevant results (about 26 minutes), and, for schools, hoping districts
+contact us when they need E-Rate hardware or sifting through federal E-Rate data by hand, which takes several
+hours a week. None of these sources tell me what a prospect actually needs. Form 470 does: it says exactly what a
+school is requesting and when bids are due. The system should cut search time and show me requests that match
+what my business does well, in time to bid.
+
+**Agent idea (first draft).** Each week, after the sync, an agent finds new or changed Form 470s within about an
+hour of Alva, Oklahoma (including southern Kansas), ranks them by how well the requested services fit my
+business, and **drafts** a short, tailored outreach email for each one, with the bid deadline and RFP links. It
+never sends anything: every draft waits in a review queue until I approve it.
+
+**Risks.**
+- *Rate limits:* low today with an app token, but Socrata can change limits; the fetch backs off on 429s.
+- *Token:* an app token could be revoked or leak; it lives only in `.env` and GitHub secrets.
+- *Data volume:* rows multiply per RFP attachment (1,457 rows were only 129 applications); expanding states or
+  years grows quickly.
+- *Terms and ethics:* the data is public domain, but it contains real staff names and emails, so outreach must follow
+  commercial-email rules (CAN-SPAM) and the site should not republish contact lists.
+- *Timing:* a missed `allowable_contract_date` means a missed bid, so the sync schedule has to be reliable.
 
 ## How to run this project
 
-<!-- Keep this current: how to run the sync, the website, and the evaluations. -->
+### Fetch the data (Week 1)
+
+1. Activate the virtual environment: `source .venv/bin/activate` (macOS) or `.venv\Scripts\Activate.ps1` (Windows).
+2. Install packages if you haven't: `pip install -r requirements.txt`
+3. Optional but recommended: get a free Socrata **app token** from opendata.usac.org (developer settings) and put it in `.env`
+   as `SOCRATA_APP_TOKEN=...`. Without it the script still runs, with lower rate limits.
+4. Run the fetch:
+
+   ```bash
+   python ingest/fetch.py                                  # Oklahoma + Kansas, funding year 2027
+   python ingest/fetch.py --states OK KS --years 2026 2027 # other states or years
+   python ingest/fetch.py --page-size 200                  # smaller pages (more requests)
+   ```
+
+5. Output:
+   - Raw API responses: `data/raw/<run time>/service_requests/page_NNN.json` and `.../applicants/page_NNN.json` (ignored by Git)
+   - Run summary (counts, missing fields, HTTP retries): `data/raw/<run time>/summary.json`
+   - Small samples for Git: `data/sample/service_requests_sample.json`, `data/sample/applicants_sample.json`
+
+The script exits with code 0 when it got at least 500 rows and no pages failed, and 1 otherwise.
+See `docs/data_dictionary.md` for what the data means.
 
 ## Credits
 
-<!-- Your data API's required attribution, plus any open-source code or samples you used. -->
+- **Data:** E-Rate FCC Form 470 Tool Data, Universal Service Administrative Company (USAC),
+  https://opendata.usac.org (dataset `jt8s-3q52`). Published as public domain; attribution to USAC.
+- **API:** Socrata Open Data API (SODA 2.1), https://dev.socrata.com
+- **Course template:** BSAD 6153 project repository template.
