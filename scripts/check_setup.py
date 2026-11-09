@@ -37,8 +37,10 @@ def warn(message):
 if sys.version_info >= (3, 12):
     ok(f"Python {sys.version_info.major}.{sys.version_info.minor}")
 else:
-    fail(f"Python {sys.version_info.major}.{sys.version_info.minor} is too old",
-         "install Python 3.12 (ask your AI agent to help) and recreate .venv with it")
+    fail(
+        f"Python {sys.version_info.major}.{sys.version_info.minor} is too old",
+        "install Python 3.12 (ask your AI agent to help) and recreate .venv with it",
+    )
 
 # 2. Virtual environment: keeps this project's packages separate from everything else.
 if sys.prefix != sys.base_prefix:
@@ -77,11 +79,15 @@ else:
 try:
     tracked = subprocess.run(
         ["git", "ls-files", "--error-unmatch", ".env"],
-        cwd=ROOT, capture_output=True, text=True,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
     )
     if tracked.returncode == 0:
-        fail(".env is tracked by Git, so your secrets would be uploaded",
-             "run: git rm --cached .env  then commit. If real keys were ever pushed, rotate them.")
+        fail(
+            ".env is tracked by Git, so your secrets would be uploaded",
+            "run: git rm --cached .env  then commit. If real keys were ever pushed, rotate them.",
+        )
     else:
         ok("Git is not tracking .env")
 except FileNotFoundError:
@@ -99,8 +105,10 @@ if example.exists():
         if value.strip():
             with_values.append(f"line {number} ({name.strip()})")
     if with_values:
-        fail(".env.example contains values on " + ", ".join(with_values),
-             "delete the values so each line reads NAME= with nothing after the equals sign")
+        fail(
+            ".env.example contains values on " + ", ".join(with_values),
+            "delete the values so each line reads NAME= with nothing after the equals sign",
+        )
     else:
         ok(".env.example contains names only")
 else:
@@ -108,8 +116,10 @@ else:
 
 # 8. Windows path length: very deep folders break some package installs.
 if os.name == "nt" and len(str(ROOT)) > 80:
-    warn(f"Your project path is {len(str(ROOT))} characters long. If installs fail with "
-         "'No such file or directory', move the project to a short folder such as C:\\dev\\bsad6153.")
+    warn(
+        f"Your project path is {len(str(ROOT))} characters long. If installs fail with "
+        "'No such file or directory', move the project to a short folder such as C:\\dev\\bsad6153."
+    )
 
 print()
 if failures:
