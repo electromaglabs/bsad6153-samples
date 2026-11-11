@@ -1,38 +1,38 @@
 [
   {
-    "billed_entity_number": "137560",
-    "billed_entity_name": "GARDNER/EDGERTON USD 231",
+    "billed_entity_number": "137541",
+    "billed_entity_name": "ATCHISON UNIF SCHOOL DIST 409",
     "applicant_type": "School District",
-    "ben_address_1": "231 EAST MADISON  PO BOX 97",
-    "billed_entity_city": "GARDNER",
+    "ben_address_1": "626 COMMERCIAL STREET",
+    "billed_entity_city": "ATCHISON",
     "billed_entity_state": "KS",
-    "billed_entity_zip": "66030",
-    "billed_entity_phone": "913-856-2052",
-    "service_request_rows": "8",
-    "last_modified": "2026-10-30T16:30:51.000"
+    "billed_entity_zip": "66002",
+    "billed_entity_phone": "913-367-4384",
+    "service_request_rows": "4",
+    "last_modified": "2025-12-09T13:47:01.000"
   },
   {
-    "billed_entity_number": "137576",
-    "billed_entity_name": "MCLOUTH UNIF SCHOOL DIST 342",
+    "billed_entity_number": "137543",
+    "billed_entity_name": "BALDWIN CITY UNIF SCH DIST 348",
     "applicant_type": "School District",
-    "ben_address_1": "217 SUMMIT ST",
-    "billed_entity_city": "MC LOUTH",
+    "ben_address_1": "715 CHAPEL STREET",
+    "billed_entity_city": "BALDWIN CITY",
     "billed_entity_state": "KS",
-    "billed_entity_zip": "66054",
-    "billed_entity_phone": "913-796-2201",
-    "service_request_rows": "3",
-    "last_modified": "2026-10-28T07:36:29.000"
+    "billed_entity_zip": "66006",
+    "billed_entity_phone": "785-594-2721",
+    "service_request_rows": "20",
+    "last_modified": "2026-01-08T13:09:14.000"
   },
   {
-    "billed_entity_number": "137584",
-    "billed_entity_name": "OLATHE UNIF SCHOOL DIST 233",
+    "billed_entity_number": "137548",
+    "billed_entity_name": "BONNER SPGS UNIF SCH DIST 204",
     "applicant_type": "School District",
-    "ben_address_1": "14160 BLACK BOB RD.",
-    "billed_entity_city": "OLATHE",
+    "ben_address_1": "2200 S 138TH ST",
+    "billed_entity_city": "BONNER SPRINGS",
     "billed_entity_state": "KS",
-    "billed_entity_zip": "66062",
-    "billed_entity_phone": "913-780-7000",
-    "service_request_rows": "11",
-    "last_modified": "2026-10-16T14:18:59.000"
+    "billed_entity_zip": "66012",
+    "billed_entity_phone": "913-422-5600",
+    "service_request_rows": "4",
+    "last_modified": "2025-12-12T09:22:38.000"
   }
 ]
