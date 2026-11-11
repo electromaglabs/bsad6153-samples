@@ -93,7 +93,9 @@ create table service_requests (
     first_seen_at         timestamptz not null default now(),
     last_updated_at       timestamptz not null default now(),
     unique (application_id, usac_line_number),
-    check ((quantity is null) = (unit is null))                 -- both present or both missing
+    -- A quantity always has a unit. (A unit without a quantity does occur: 4 FY2026 requests
+    -- give a unit such as 'Feet' and leave the amount blank.)
+    constraint quantity_has_unit check (quantity is null or unit is not null)
 );
 
 -- ---------------------------------------------------------------------------
