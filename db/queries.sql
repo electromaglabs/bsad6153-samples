@@ -43,10 +43,9 @@ limit 15;
 
 -- Q3. How many applications are filed through an E-Rate consultant, and which consultants
 --     file the most?
---     SURPRISE (DRAFT: confirm against your results and rewrite in your own words):
---     I assumed I'd be pitching to schools directly. In the Nov 11 pull, about 87% of applications
---     named a consultant, and a single firm filed roughly a quarter of all applications in OK and KS.
---     The consultant, not the school, may be the first person an MSP needs to know.
+--  Surprisingly, almost 90% of E-Rate applicants use a consultant, and almost 25% of applications
+-- used the same consultant. Very useful information.
+
 select
     coalesce(split_part(trim(both '{}' from a.consulting_firm_data), '|', 1), '(no consultant)')
         as consultant,
@@ -71,7 +70,7 @@ order by 1;
 
 -- Q5. Which applicants near Alva filed a Form 470 in the last 12 months, and what did they ask for?
 --     The data has no coordinates, so "about an hour from Alva" is a list of towns.
---     DRAFT list: edit it to match the towns you actually serve.
+
 select
     ap.name                                     as applicant,
     ap.city,
