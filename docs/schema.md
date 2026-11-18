@@ -1,4 +1,4 @@
-# Database Schema (Milestone 2)
+# Database Schema (Milestones 2-3)
 
 The database holds E-Rate FCC Form 470 filings from USAC Open Data (dataset `jt8s-3q52`) for
 Oklahoma and Kansas, funding years 2026 and 2027. The SQL lives in [`db/schema.sql`](../db/schema.sql).
@@ -113,4 +113,56 @@ version greatly reduced results because most results were Original.
 The API sends one row per service request per RFP attachment, so one application appeared as 98 rows.
 Giving attachments their own table means a service request is stored once, and counting requests or
 applications never gets inflated by large numbers of RFP documents.
+
+
+## Access roles
+
+Added in Milestone 3. Each part of the system connects as a role that can do only what it needs.
+
+| Part of the system | Connects as | Allowed to |
+|---|---|---|
+| Sync pipeline (`ingest/`) | `postgres` via `DATABASE_URL` | Create tables, insert, update |
+| Golden-question checker, website, chatbot | `app_reader` via `APP_DATABASE_URL` | Read the data tables, nothing else |
+| Agent (Milestone 6) | `agent_writer` (not created yet) | Read data; write only its own tables |
+
+The grants live in `db/roles.sql`. The password is set only in the Supabase SQL editor, never in the
+repository. Supabase's automatic REST Data API is switched off, so the tables can be reached only through
+these roles.
+
+**Row Level Security.** Supabase had RLS switched on for all four tables. The first permission test
+returned 0 applicants for `app_reader` even though the table held 797: with RLS on and no policy, a role
+silently sees no rows. We kept RLS on and added a read policy for `app_reader` on each table, so
+Supabase's built-in `anon` and `authenticated` roles still see nothing.
+
+### Evidence (2026-11-17)
+
+`python scripts/check_db.py --app`:
+
+```
+Here is the output after running scripts/check_permissions.py
+
+((.venv) ) electromag@electromag-2 bsad6153-samples % python scripts/check_permissions.py
+Connected as database user: app_reader
+
+SELECT (should work)
+  select count(*) from applicants
+  -> OK: 797
+
+INSERT (should fail)
+  insert into applicants (billed_entity_number, name, applicant_type, city, state, zip) values ('999999999', 'Permission test', 'School', 'Test', 'OK', '00000')
+  -> ERROR: permission denied for table applicants
+
+UPDATE (should fail)
+  update applicants set name = name
+  -> ERROR: permission denied for table applicants
+
+DELETE (should fail)
+  delete from applicants
+  -> ERROR: permission denied for table applicants
+
+[ok] app_reader can read and cannot change data.
+```
+
+`python scripts/check_permissions.py` (each statement is rolled back, so the test can't change data):
+
 
