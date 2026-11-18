@@ -18,3 +18,8 @@ quote-style = "double"
 [tool.ruff.lint.per-file-ignores]
 # The setup check exists to catch students running an older Python, so keep the version test.
 "scripts/check_setup.py" = ["UP036"]
+
+[tool.ruff.lint.isort]
+# ingest/sync.py imports these two modules from the ingest/ folder. Marking them as our own
+# ("first-party") keeps them in their own group after the installed packages.
+known-first-party = ["fetch", "load"]
