@@ -7,6 +7,7 @@
 - [ ] I read every change in this pull request before submitting it.
 - [ ] No secrets anywhere: not in code, not in `.env.example`, not in screenshots, not in Git history.
 - [ ] I ran it from a clean start, and it works on top of my previous milestone.
+- [ ] `ruff format .` and `ruff check .` pass with no changes or errors.
 - [ ] Documentation for this milestone is updated (`docs/`, README).
 - [ ] Screencast link: <!-- paste here -->
 

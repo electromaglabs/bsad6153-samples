@@ -13,7 +13,7 @@ Two rules this file follows, and yours must keep following:
 
 import hmac
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import psycopg
 import streamlit as st
@@ -34,9 +34,7 @@ def _query_latest_successful_sync():
     # outage doesn't stay on screen for the whole TTL.
     with psycopg.connect(os.environ["APP_DATABASE_URL"], connect_timeout=10) as conn:
         # The value goes in as a parameter (%s), never pasted into the SQL text.
-        row = conn.execute(
-            "select max(finished_at) from sync_runs where status = %s", ("success",)
-        ).fetchone()
+        row = conn.execute("select max(finished_at) from sync_runs where status = %s", ("success",)).fetchone()
     return row[0]
 
 
@@ -64,7 +62,7 @@ def freshness_banner():
     elif finished_at is None:
         st.warning("The data has never been synced successfully.")
     else:
-        hours_old = (datetime.now(timezone.utc) - finished_at).total_seconds() / 3600
+        hours_old = (datetime.now(UTC) - finished_at).total_seconds() / 3600
         message = f"Data last updated {finished_at:%Y-%m-%d %H:%M} UTC ({hours_old:.1f} hours ago)."
         if hours_old > FRESHNESS_HOURS:
             st.warning("This data may be out of date. " + message)

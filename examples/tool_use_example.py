@@ -29,9 +29,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MODEL = "claude-opus-5-5"
-MAX_STEPS = 6            # the loop stops here, whatever the model wants
-MAX_TOKENS = 4000        # cap on each response (part of your spending limits)
-MAX_ROWS = 20            # cap on rows any tool may return
+MAX_STEPS = 6  # the loop stops here, whatever the model wants
+MAX_TOKENS = 4000  # cap on each response (part of your spending limits)
+MAX_ROWS = 20  # cap on rows any tool may return
 # Prices per million tokens, used only to print a cost estimate. Check the provider's
 # current pricing page; these change.
 PRICE_INPUT_PER_MTOK = 4.00
@@ -82,7 +82,7 @@ def get_recent_sync_runs(limit):
             (limit,),
         )
         columns = [c.name for c in cursor.description]
-        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+        return [dict(zip(columns, row, strict=True)) for row in cursor.fetchall()]
 
 
 TOOL_FUNCTIONS = {"get_recent_sync_runs": get_recent_sync_runs}
@@ -122,11 +122,14 @@ def ask(question):
             fallbacks="default",
         )
 
-        cost = (response.usage.input_tokens * PRICE_INPUT_PER_MTOK
-                + response.usage.output_tokens * PRICE_OUTPUT_PER_MTOK) / 1_000_000
+        cost = (
+            response.usage.input_tokens * PRICE_INPUT_PER_MTOK + response.usage.output_tokens * PRICE_OUTPUT_PER_MTOK
+        ) / 1_000_000
         total_cost += cost
-        print(f"[step {step}] stop={response.stop_reason} tokens in/out="
-              f"{response.usage.input_tokens}/{response.usage.output_tokens} cost~${cost:.4f}")
+        print(
+            f"[step {step}] stop={response.stop_reason} tokens in/out="
+            f"{response.usage.input_tokens}/{response.usage.output_tokens} cost~${cost:.4f}"
+        )
 
         if response.stop_reason == "refusal":
             category = response.stop_details.category if response.stop_details else None
@@ -144,10 +147,11 @@ def ask(question):
             if block.type != "tool_use":
                 continue
             output, row_count, is_error = run_tool(block.name, block.input)
-            print(f"         tool {block.name}({json.dumps(block.input)}) -> "
-                  f"{'ERROR: ' + output if is_error else f'{row_count} rows'}")
-            results.append({"type": "tool_result", "tool_use_id": block.id,
-                            "content": output, "is_error": is_error})
+            print(
+                f"         tool {block.name}({json.dumps(block.input)}) -> "
+                f"{'ERROR: ' + output if is_error else f'{row_count} rows'}"
+            )
+            results.append({"type": "tool_result", "tool_use_id": block.id, "content": output, "is_error": is_error})
         messages.append({"role": "user", "content": results})
 
     return f"Stopped after {MAX_STEPS} steps without a final answer.", total_cost
