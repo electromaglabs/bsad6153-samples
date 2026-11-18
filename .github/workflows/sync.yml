@@ -1,0 +1,52 @@
+# Keeps the database up to date with USAC's Form 470 data (Milestone 3, Part D).
+#
+# Runs ingest/sync.py twice a day on a schedule, and on demand from the Actions tab
+# (Actions -> Sync E-Rate data -> Run workflow). Secrets are stored in GitHub
+# (Settings -> Secrets and variables -> Actions) and never appear in this file.
+
+name: Sync E-Rate data
+
+on:
+  schedule:
+    # Every 12 hours, at 11:43 and 23:43 UTC (5:43 AM and 5:43 PM US Central time in winter).
+    # USAC refreshes the dataset daily; it last updated around 10:30 UTC, so the morning run comes after it.
+    # The odd minute avoids the top of the hour, when GitHub's schedulers are busiest and runs get delayed.
+    - cron: "43 11,23 * * *"
+  workflow_dispatch: # the "Run workflow" button for manual runs
+
+# The job only needs to read the code. It never writes back to the repository.
+permissions:
+  contents: read
+
+# Never let two syncs run at the same time (for example, a manual run during a scheduled one).
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20 # a normal run takes a few minutes; give up rather than hang
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Run the sync
+        # Each secret is handed to this one step as an environment variable. sync.py reads it with
+        # os.getenv(), exactly as it reads .env on your computer. GitHub masks secret values in the log.
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+        # Record whether the schedule or a person started this run. sync.py exits with 1 when the sync
+        # fails, which fails this step: GitHub shows a red X and emails you.
+        run: python ingest/sync.py --trigger ${{ github.event_name == 'schedule' && 'schedule' || 'manual' }}

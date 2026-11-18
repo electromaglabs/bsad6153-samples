@@ -160,6 +160,27 @@ never sends anything: every draft waits in a review queue until I approve it.
 The script exits with code 0 when it got at least 500 rows and no pages failed, and 1 otherwise.
 See `docs/data_dictionary.md` for what the data means.
 
+### Keep the data up to date (Milestone 3)
+
+`ingest/sync.py` combines fetching and loading. It downloads only records changed since the last
+successful run (plus a 7-day overlap for late arrivals), upserts them, and logs every run in `sync_runs`.
+
+```bash
+python ingest/sync.py            # incremental sync, logged as a manual run
+python ingest/sync.py --full     # re-check every record, ignoring the watermark
+python scripts/status.py         # when was the data last updated, and what changed in 7 days?
+```
+
+GitHub Actions runs the sync automatically (`.github/workflows/sync.yml`) using the `DATABASE_URL` and
+`SOCRATA_APP_TOKEN` repository secrets.
+
+**Why every 12 hours.** USAC lists this dataset's update frequency as daily (dataset metadata, checked
+2026-11-17). Syncing more often than the source changes would only repeat the same requests. Twice a day
+means a new USAC update reaches the database within about 12 hours, and if one run fails, the next one
+still catches up the same day. Each run makes only a few API requests (about 2 on a quiet day, 30 for a
+full re-check), far below Socrata's rate limits for a registered app token. Form 470 bidding windows last at
+least 28 days, so 12-hour-old data never costs a bidding opportunity.
+
 ## Credits
 
 - **Data:** E-Rate FCC Form 470 Tool Data, Universal Service Administrative Company (USAC),
