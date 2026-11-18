@@ -5,7 +5,7 @@
 --
 -- Source: USAC Open Data, E-Rate FCC Form 470 (dataset jt8s-3q52). See docs/data_dictionary.md.
 -- Every table keeps the source's natural ID under a UNIQUE constraint and uses an identity
--- column we generate as its primary key. Week 3 adds sync_runs; Week 6 adds agent tables.
+-- column we generate as its primary key. sync_runs (Week 3) logs every sync; Week 6 adds agent tables.
 --
 -- Run once against an empty database (Supabase SQL editor, or psql "$DATABASE_URL" -f db/schema.sql).
 
@@ -117,3 +117,37 @@ create index applications_applicant_id_idx on applications (applicant_id);
 create index applications_allowable_contract_date_idx on applications (allowable_contract_date);
 create index service_requests_application_id_idx on service_requests (application_id);
 create index rfp_documents_service_request_id_idx on rfp_documents (service_request_id);
+
+-- ---------------------------------------------------------------------------
+-- sync_runs (Milestone 3): one row per run of ingest/sync.py.
+--
+-- sync.py inserts the row as 'failed' with "did not finish" when the run STARTS, then updates it
+-- when the run ends. So a run that crashes or is stopped halfway still leaves a truthful row
+-- (failed, finished_at empty) instead of no row at all.
+--
+-- watermark: the newest last_modified_at this run saw from USAC. The next run asks only for
+-- records modified since the watermark of the last successful run.
+--
+-- If your database already has the four tables above, run only this block (from "create table
+-- sync_runs" to the end) in the Supabase SQL editor, then run db/roles.sql again.
+-- ---------------------------------------------------------------------------
+create table sync_runs (
+    run_id            bigint generated always as identity primary key,
+    started_at        timestamptz not null default now(),
+    finished_at       timestamptz,
+    status            text not null check (status in ('success', 'partial', 'failed')),
+    trigger           text not null check (trigger in ('schedule', 'manual')),
+    records_fetched   integer not null default 0 check (records_fetched >= 0),   -- API rows downloaded
+    records_inserted  integer not null default 0 check (records_inserted >= 0),  -- new rows, all tables
+    records_updated   integer not null default 0 check (records_updated >= 0),   -- rows that changed
+    records_deleted   integer not null default 0 check (records_deleted >= 0),   -- lines removed at the source
+    watermark         timestamptz,
+    error_message     text,                                                       -- never contains secrets
+    check (finished_at is null or finished_at >= started_at)
+);
+
+-- The status query and the watermark lookup both look for the newest successful run.
+create index sync_runs_status_started_at_idx on sync_runs (status, started_at desc);
+
+-- Same protection as the data tables: Row Level Security on, readable only through policies.
+alter table sync_runs enable row level security;

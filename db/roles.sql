@@ -45,7 +45,10 @@ create policy app_reader_select on service_requests for select to app_reader usi
 drop policy if exists app_reader_select on rfp_documents;
 create policy app_reader_select on rfp_documents for select to app_reader using (true);
 
--- Part C adds the same grant and policy for sync_runs.
+-- sync_runs (Part C): app_reader may read the run log; only the sync (as postgres) writes to it.
+grant select on sync_runs to app_reader;
+drop policy if exists app_reader_select on sync_runs;
+create policy app_reader_select on sync_runs for select to app_reader using (true);
 
 -- Stops a runaway query (for example, one a chatbot wrote) from tying up the database.
 alter role app_reader set statement_timeout = '15s';
