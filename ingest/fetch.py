@@ -13,7 +13,7 @@ What it fetches (two resource types from the same dataset):
      billed_entity_number.
 
 Run it from the project folder with the virtual environment active:
-    python ingest/fetch.py                       # OK + KS, funding year 2027
+    python ingest/fetch.py                       # OK + KS, funding years 2026 and 2027
     python ingest/fetch.py --states OK KS TX --years 2026 2027
     python ingest/fetch.py --page-size 200       # smaller pages = more requests
 """
@@ -190,7 +190,7 @@ def count_missing_fields(records, fields):
 def main():
     parser = argparse.ArgumentParser(description="Fetch E-Rate Form 470 data from USAC Open Data.")
     parser.add_argument("--states", nargs="+", default=["OK", "KS"], help="Two-letter states (default: OK KS)")
-    parser.add_argument("--years", nargs="+", default=["2027"], help="Funding years (default: 2027)")
+    parser.add_argument("--years", nargs="+", default=["2026", "2027"], help="Funding years (default: 2026 2027)")
     parser.add_argument("--page-size", type=int, default=500, help="Rows per request (default: 500)")
     args = parser.parse_args()
 
