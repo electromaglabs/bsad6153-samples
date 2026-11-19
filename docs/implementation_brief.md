@@ -18,7 +18,7 @@
 
 Only two entries were timed live; the rest, including E-Rate, are estimates and are marked that way in the log. The first timed E-Rate session in my usage log (Milestone 4) will give a measured comparison.
 
-**What frustrates me:** none of these sources say what a prospect actually needs. Google ranks paid ads first. Facebook pages don't show whether a business is still active, and contact details and business location can be inaccurate or outdated. E-Rate data is the one source that says exactly what a school wants and when bids close, but sorting it by hand takes hours, so deadlines slip by. My confidence never rose above 3 out of 5.
+**What frustrates me:** none of these sources say what a prospect actually needs. Google ranks paid ads first. Facebook pages don't show whether a business is still active, and contact details and business location can be inaccurate or outdated. E-Rate data is the one source that says exactly what a school wants and when bids close, but sorting it by hand takes hours, so deadlines slip by. My confidence never rose above 3 out of 5. There are times when I am confident about the contact information on social media and local websites like the Chamber of Commerce, but there is really no data like the data you receive by querying Form 470 for this type of work. It allows you to see what customers are needing and when, all without making a phone call or any inquiry.
 
 ## 2. Should this use AI?
 
