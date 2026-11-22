@@ -297,7 +297,11 @@ def main():
     rfp_documents = build_rfp_documents(kept_rows)
     log.info(
         "Read %d API rows -> %d applicants, %d applications, %d service requests, %d RFP documents",
-        len(service_rows), len(applicants), len(applications), len(service_requests), len(rfp_documents),
+        len(service_rows),
+        len(applicants),
+        len(applications),
+        len(service_requests),
+        len(rfp_documents),
     )
 
     # --- Connect (the URL holds the password, so it is never printed) ---
@@ -328,8 +332,9 @@ def main():
             # 3. service_requests -> applications
             cur.executemany(
                 INSERT_SERVICE_REQUEST,
-                attach_ids(service_requests, application_ids, ["application_number"], "application_id",
-                           "service_requests"),
+                attach_ids(
+                    service_requests, application_ids, ["application_number"], "application_id", "service_requests"
+                ),
             )
             cur.execute(
                 """select a.application_number, sr.usac_line_number, sr.service_request_id
@@ -340,15 +345,24 @@ def main():
             # 4. rfp_documents -> service_requests
             cur.executemany(
                 INSERT_RFP_DOCUMENT,
-                attach_ids(rfp_documents, request_ids, ["application_number", "usac_line_number"],
-                           "service_request_id", "rfp_documents"),
+                attach_ids(
+                    rfp_documents,
+                    request_ids,
+                    ["application_number", "usac_line_number"],
+                    "service_request_id",
+                    "rfp_documents",
+                ),
             )
 
             after = count_rows(cur)
     except psycopg.errors.IntegrityError as error:
         # A row broke a constraint. Report which one, but not the row (it can contain contact details).
-        log.error("Load rolled back: %s (constraint: %s, table: %s)",
-                  error.diag.message_primary, error.diag.constraint_name, error.diag.table_name)
+        log.error(
+            "Load rolled back: %s (constraint: %s, table: %s)",
+            error.diag.message_primary,
+            error.diag.constraint_name,
+            error.diag.table_name,
+        )
         return 1
     except psycopg.OperationalError as error:
         log.error("Could not connect or lost the connection: %s", str(error).strip().splitlines()[0])

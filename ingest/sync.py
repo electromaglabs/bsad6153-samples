@@ -136,7 +136,7 @@ def fetch_rows(session, where, stats):
         params = {"$where": where, "$order": ":id", "$limit": PAGE_SIZE, "$offset": offset}
         page = get_with_retries(session, params, stats)  # retries 429 and 5xx with backoff
         if page is None:
-            raise FetchError(f"USAC request failed at offset {offset} after retries")
+            raise FetchError(f"USAC request failed at offset {offset} (see the log for the HTTP status)")
         rows.extend(page)
         log.info("Fetched %d rows (total %d)", len(page), len(rows))
         if len(page) < PAGE_SIZE:  # a short page means we reached the end

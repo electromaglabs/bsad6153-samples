@@ -96,3 +96,64 @@ Contact lists or real names could be leaked, spammed or phished. Misreading coul
 **Who should be allowed to read or change these records in your system?**
 The job that handles the initial sync should be the only entity writing data I think. Any interaction by the user should only need to be read only, and no one is able to edit the USAC data.
 
+
+## Lineage (Milestone 3)
+
+How one Form 470 record travels from USAC to the tables. Every step runs inside `ingest/sync.py`, started by
+GitHub Actions every 12 hours (`.github/workflows/sync.yml`) or by hand.
+
+```mermaid
+flowchart TD
+    A["USAC Open Data API<br/>dataset jt8s-3q52<br/>one row per application × line item × attachment"]
+    B["Fetch (sync.py, reusing fetch.py)<br/>only rows modified since watermark − 7 days<br/>OK + KS, funding year 2026 onward<br/>retries with backoff on 429 / 5xx"]
+    C["Transform (sync.py, reusing load.py)"]
+    D[(applicants)]
+    E[(applications)]
+    F[(service_requests)]
+    G[(rfp_documents)]
+    H[(sync_runs)]
+    A --> B --> C
+    C -->|"upsert by billed_entity_number"| D
+    C -->|"upsert by application_number"| E
+    C -->|"upsert by application + line number<br/>delete lines USAC dropped"| F
+    C -->|"upsert by line item + URL<br/>delete documents USAC dropped"| G
+    B -. "start, counts, watermark, status" .-> H
+```
+
+Transformations along the way, in order:
+
+1. **Filter at the source:** `billed_entity_state in ('OK','KS')`, funding years 2026 through next year, and
+   `last_modified_date_time` after the watermark minus 7 days.
+2. **Pick one version per application:** `Current` if USAC has one, otherwise `Original`.
+3. **Convert types:** text numbers to integers, `'True'`/`'False'` to booleans, empty strings to NULL, and
+   zone-less USAC times (US Eastern) to `timestamptz`.
+4. **Split the repeated rows:** one row per applicant (newest details win), per application, per line item
+   (USAC's `service_request_id` becomes `usac_line_number`) and per RFP attachment.
+5. **Attach database IDs:** each child gets its parent's generated ID before it is written.
+6. **Upsert in one transaction:** insert new rows; update a row only if a value changed (`last_updated_at`
+   moves only then, `first_seen_at` never).
+7. **Delete what disappeared:** line items and documents no longer listed on a re-fetched form.
+8. **Log the run:** counts, the newest `last_modified_date_time` seen (the next watermark), and the status.
+
+## Freshness guarantee (Milestone 3)
+
+**Worst case, with every run succeeding: a change at USAC reaches my database about 44 hours later.** Normally
+it takes well under a day.
+
+| Delay | Worst case | Why |
+|---|---|---|
+| USAC publishing the change | ~24 hours | The dataset updates daily (dataset metadata, "Update Frequency: Daily") |
+| Waiting for the next scheduled sync | 12 hours | The sync runs every 12 hours |
+| GitHub starting the run late | ~8 hours | Observed: scheduled runs started 7-8 hours late on 2026-11-18 and 2026-11-22 |
+| **Total** | **~44 hours** | |
+
+What makes it worse:
+
+- **Each failed run adds 12 hours** until the next one succeeds. A run that fails visibly emails me.
+- **USAC may not publish on weekends.** The newest change stored stayed at 2026-11-20 from Friday through Sunday,
+  2026-11-22 (one weekend observed). If that holds, a Friday change can wait until Monday's publish.
+- **GitHub disables scheduled workflows in a public repository after 60 days without activity**, and the data
+  would stop updating. `scripts/status.py` warns when the last successful sync is more than 30 hours old.
+
+The deadline that matters for outreach is a Form 470's bidding window, at least 28 days. Even the worst case
+leaves most of that window.
