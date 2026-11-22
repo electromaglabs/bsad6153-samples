@@ -271,3 +271,44 @@ answers will mostly describe school districts.
 **What the system will do about it.** Answers about the Alva area or about a single applicant should give the
 number of applications they rest on. Rankings and judgments of applicants should be declined (Q13). The near-Alva
 filter stays labeled as a hand-made town list, not a measured drive time (Q05, Q09).
+
+## Change log: what the scheduled runs taught me (Milestone 3)
+
+| Date | Learned | What I did |
+|---|---|---|
+| 2026-11-17 | All rows of one application share one `last_modified_date_time` (checked across 1,217 applications) | Safe to fetch by watermark and to delete lines that disappear from a re-fetched form |
+| 2026-11-17 | USAC lists the dataset's update frequency as daily; rows last updated 2026-11-16 | Chose a 12-hour schedule (README) |
+| 2026-11-17 | Supabase had Row Level Security on for every table, so `app_reader` saw 0 rows with no error | Added a read policy per table instead of turning RLS off |
+| 2026-11-17 | Schools amend forms: the first sync updated 8 applications and 50 of their line items | The upsert updates only changed rows; lines removed from a form are deleted |
+| 2026-11-18 | GitHub started the first scheduled run about 8 hours late (due 11:43 UTC, started 19:34 UTC) | Counted it in the freshness guarantee; later runs were also up to 7 hours late |
+| 2026-11-18 | `status.py` reported "0 changed" for a week because all rows were first loaded inside its 7-day window | Expected until the Milestone 2 load is older than 7 days; no change needed |
+| 2026-11-22 | The newest USAC change stayed at 2026-11-20 all weekend | USAC may not publish on weekends; added to the freshness guarantee, to confirm next weekend |
+| 2026-11-22 | USAC lists fewer RFP documents than its own attachment count on 33 line items | Left as published (see Decisions) |
+| 2026-11-22 | An invalid app token gets HTTP 403, which the sync correctly does not retry | Fixed the error message, which wrongly said "after retries" |
+
+**Known gap: whole applications that disappear.** The sync deletes line items and documents that vanish from a
+form it re-fetches, but an application deleted from USAC entirely never shows up in an incremental fetch, so it
+would stay in my tables. None has been seen so far. A periodic `python ingest/sync.py --full` re-checks every
+record, but it does not delete missing applications either; that would need a separate cleanup step.
+
+## Ownership and alerting (Milestone 3)
+
+If this were a company system:
+
+| Role | Who | Responsible for |
+|---|---|---|
+| **Pipeline owner** | The data engineer who maintains `ingest/` (in my business, me) | Fixing failed runs, rotating the database password and Socrata token, schema changes |
+| **Data consumer** | Sales and outreach staff who use the app and chatbot | Reporting answers that look wrong or stale |
+| **Source contact** | USAC Open Data support | Problems in the published data, such as the 33 attachment-count gaps |
+
+**Who is alerted, and how:**
+
+- **A failed sync:** the pipeline owner. GitHub emails the repository owner when a workflow fails (red X), and the
+  failure is recorded in `sync_runs` with its error message.
+- **Stale data:** the people using the data. From Milestone 4, the app shows when data was last updated, and the
+  chatbot will warn when the last successful sync is more than 30 hours old (`scripts/status.py`).
+- **A partial run:** the pipeline owner. It shows as a warning in the Actions log and in `sync_runs.error_message`,
+  listing the skipped applications.
+
+A gap in this setup: GitHub's failure email goes to one person. In a company, failures should also go to a shared
+channel, so a sync doesn't go unfixed while the owner is away.
