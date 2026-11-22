@@ -1,0 +1,13 @@
+id,rows,fingerprint,change,first_row
+Q01,143,29196fb9c689,,"{""applicant"": ""BELOIT USD 273"", ""city"": ""BELOIT"", ""state"": ""KS"", ""application_number"": ""270001652"", ""allowable_contract_date"": ""2026-11-23"", ""days_left"": 1}"
+Q02,15,8ae40a89e781,,"{""function"": ""Existing Equipment"", ""applications_fy2026"": 376, ""applications_fy2027"": 71, ""applications_total"": 447}"
+Q03,34,3cfb94211cc0,,"{""consultant"": ""Kellogg & Sovereign Consulting"", ""applications"": 323, ""percent_of_applications"": ""25.3""}"
+Q04,9,ec351231244d,,"{""month_certified"": ""2025-07"", ""applications"": 4}"
+Q05,24,3660a4fc62b3,,"{""applicant"": ""WAYNOKA PUBLIC LIBRARY"", ""city"": ""WAYNOKA"", ""state"": ""OK"", ""application_number"": ""270003041"", ""certified"": ""2026-11-02"", ""requested"": ""Category One Network Equipment; Internet Access and Data Transmission Service""}"
+Q06,156,4acfcff7b9c5,,"{""applicant"": ""PUTNAM CITY INDEPENDENT SCHOOL DISTRICT 1"", ""city"": ""OKLAHOMA CITY"", ""state"": ""OK"", ""funding_years"": 2, ""applications"": 7}"
+Q07,119,1cf571000127,,"{""applicant"": ""BELOIT USD 273"", ""city"": ""BELOIT"", ""state"": ""KS"", ""application_number"": ""270001652"", ""function"": ""Switches and Necessary Software and Licenses"", ""quantity"": 2, ""unit"": ""Each"", ""allowable_contract_date"": ""2026-11-23""}"
+Q08,88,247373491c7e,,"{""applicant"": ""CANTON INDEP SCHOOL DIST 105"", ""city"": ""CANTON"", ""state"": ""OK"", ""applications_without_consultant"": 2, ""latest_filing"": ""2026-11-20""}"
+Q14,4,1738930d522c,,"{""state"": ""KS"", ""funding_year"": 2026, ""applications"": 417, ""applicants"": 316}"
+Q15,1,1cc2b7edb5fc,,"{""new_applications"": 62, ""first_seen"": ""2026-11-18 04:08:59.841290+00:00"", ""last_seen"": ""2026-11-22 18:39:09.051339+00:00""}"
+Q16,1,00f601effa36,,"{""finished_at"": ""2026-11-22 18:39:09.445635+00:00"", ""age"": ""4:01:28.281924"", ""records_inserted"": 220, ""records_updated"": 32}"
+Q17,69,01239f337fbf,,"{""applicant"": ""BISHOP WARD HIGH SCHOOL"", ""city"": ""KANSAS CITY"", ""state"": ""KS"", ""application_number"": ""270002611"", ""allowable_contract_date"": ""2026-11-23"", ""days_left"": 1}"
