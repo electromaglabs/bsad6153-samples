@@ -124,8 +124,15 @@ def main():
             if q["id"] in before:
                 change = "unchanged" if before[q["id"]] == fp else "CHANGED"
             print(f"[{status:>4}] {q['id']} {len(rows):>5} rows  {change}")
-            results.append({"id": q["id"], "rows": len(rows), "fingerprint": fp, "change": change,
-                            "first_row": json.dumps(first, default=str)})
+            results.append(
+                {
+                    "id": q["id"],
+                    "rows": len(rows),
+                    "fingerprint": fp,
+                    "change": change,
+                    "first_row": json.dumps(first, default=str),
+                }
+            )
 
     RESULTS_DIR.mkdir(exist_ok=True)
     out = RESULTS_DIR / f"reference_{checked_at:%Y%m%dT%H%M%SZ}.csv"

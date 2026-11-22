@@ -104,8 +104,10 @@ def main():
     if not runs:
         print("  None.")
     for status, count, fetched, inserted, updated, deleted in runs:
-        print(f"  {status:<8} {count:>3} runs: {fetched} fetched, {inserted} inserted, "
-              f"{updated} updated, {deleted} deleted")
+        print(
+            f"  {status:<8} {count:>3} runs: {fetched} fetched, {inserted} inserted, "
+            f"{updated} updated, {deleted} deleted"
+        )
 
     print("\nDATA CHANGED IN THE LAST 7 DAYS")
     for table_name, new_rows, changed_rows in changes:
